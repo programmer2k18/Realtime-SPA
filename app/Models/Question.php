@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
+    protected $fillable = ['title','slug','body','user_id','category_id'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -18,4 +20,6 @@ class Question extends Model
     public function category(){
         return $this->belongsTo(Category::class);
     }
+
+
 }
