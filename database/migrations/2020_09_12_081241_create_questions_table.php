@@ -13,22 +13,29 @@ class CreateQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
-            $table->Increments('id');
-            $table->string('title');
-            $table->string('slug');
-            $table->text('body');
-            $table->integer('user_id')->unsigned();
-            $table->integer('category_id')->unsigned();
+        if (! Schema::hasTable('questions')) {
+            Schema::create('questions', function (Blueprint $table) {
 
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade')->onUpdate('cascade');
+                $table->Increments('id');
+                $table->string('title');
+                $table->string('slug');
+                $table->text('body');
 
-            $table->foreign('category_id')->references('id')
-                ->on('categories')->onDelete('cascade')->onUpdate('cascade');
+                $table->integer('user_id')->unsigned();
+                $table->integer('category_id')->unsigned();
 
-            $table->timestamps();
-        });
+                $table->foreign('user_id')->references('id')
+                    ->on('users')->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+                $table->foreign('category_id')->references('id')
+                    ->on('categories')->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+                $table->timestamps();
+
+            });
+        }
     }
 
     /**
