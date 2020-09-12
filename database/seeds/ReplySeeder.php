@@ -11,6 +11,7 @@ class ReplySeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(\App\Models\Reply::class,100)->create();
+
     }
 }
