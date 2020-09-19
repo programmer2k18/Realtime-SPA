@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
 
 class Question extends Model
 {
@@ -27,12 +29,14 @@ class Question extends Model
     }
 
     public static function storeQuestion(array $data){
+        $data = array_merge($data,['slug'=>Str::slug($data['title'])]);
         return Question::create($data);
     }
 
     public static function getAllQuestions(){
         return Question::with('user','category')->latest()->get();
     }
+
     public function path(){
         return asset("api/question/$this->slug");
     }

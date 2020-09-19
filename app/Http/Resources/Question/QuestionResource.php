@@ -18,8 +18,9 @@ class QuestionResource extends JsonResource
             'title'=>$this->title,
             'body'=>$this->body,
             'path'=>$this->path(),
-            'username'=>$this->user->name,
+            'author'=>$this->user->name,
             'category'=>$this->category->name,
+            'comments'=>$this->replies,
             'created_at'=>$this->created_at->format('d M H:i'),
         ];
     }

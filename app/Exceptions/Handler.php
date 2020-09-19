@@ -3,7 +3,14 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,8 +55,27 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        return parent::render($request, $exception);
+        if ($e instanceof NotFoundHttpException)
+            return response()->json("Requested url:{$request->url()} is not valid",404);
+        elseif ($e instanceof ModelNotFoundException)
+            return response()->json("Invalid URL parameters or ".$e->getMessage(),404);
+        elseif ($e instanceof QueryException)
+            return response()->json($e->getMessage(),404);
+
+        elseif ($e instanceof TokenBlacklistedException)
+            return response()->json("This token is blacklisted and can't be used.",400);
+
+        elseif ($e instanceof TokenInvalidException)
+            return response()->json("This token is not valid",400);
+
+        elseif ($e instanceof TokenExpiredException)
+            return response()->json("This token is expired and not still available",400);
+
+        elseif ($e instanceof JWTException)
+            return response()->json("Invalid token or token not provided",400);
+
+        return parent::render($request, $e);
     }
 }

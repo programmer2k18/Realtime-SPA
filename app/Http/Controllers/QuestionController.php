@@ -6,9 +6,15 @@ use App\Http\Resources\Question\QuestionResource;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class QuestionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index','show']]);
+    }
+
     /**
      * Display a listing of questions.
      *
@@ -63,7 +69,8 @@ class QuestionController extends Controller
             return response(['msg'=>'Not complete or invalid parameters',
                 'errors'=>$validator->errors()],206);
 
-        $question->update($validator->validated());
+        $data = array_merge($validator->validated(),['slug'=>Str::slug($request->title)]);
+        $question->update($data);
         return response( new QuestionResource($question),200);
     }
 
@@ -85,7 +92,6 @@ class QuestionController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'body' => 'required|string',
-            'slug' => 'required|string',
             'category_id' => 'required|numeric',
             'user_id' => 'required|numeric'
         ]);
