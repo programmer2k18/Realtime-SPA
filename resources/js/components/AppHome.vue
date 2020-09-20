@@ -1,17 +1,24 @@
 <template>
-    <div>
-        <v-app>
-            <v-alert :value="true" type="success">
-                Hello world from vuetify
-            </v-alert>
-        </v-app>
-    </div>
+
+    <v-app>
+           <div>
+               <Toolbar></Toolbar>
+               <app-footer></app-footer>
+           </div>
+    </v-app>
+
 </template>
 
 <script>
+
+    import Toolbar from "./Toolbar";
+    import AppFooter from "./AppFooter";
+
     export default {
-        name: "AppHome"
+        name: "AppHome",
+        components: {AppFooter, Toolbar}
     }
+
 </script>
 
 <style scoped>
