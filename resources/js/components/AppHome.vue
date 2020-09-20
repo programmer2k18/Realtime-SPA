@@ -2,8 +2,11 @@
 
     <v-app>
            <div>
+
                <Toolbar></Toolbar>
+               <router-view></router-view>
                <app-footer></app-footer>
+
            </div>
     </v-app>
 
@@ -13,10 +16,11 @@
 
     import Toolbar from "./Toolbar";
     import AppFooter from "./AppFooter";
+    import Login from "./login/login";
 
     export default {
         name: "AppHome",
-        components: {AppFooter, Toolbar}
+        components: {Login, AppFooter, Toolbar}
     }
 
 </script>
