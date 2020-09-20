@@ -24,7 +24,7 @@
                 </ValidationProvider>
 
 
-                <ValidationProvider v-slot="{ errors, valid }" rules="required" name="checkbox">
+                <ValidationProvider v-slot="{ errors, valid }"  name="checkbox">
                     <v-checkbox
                             v-model="rememberMe"
                             :error-messages="errors"
@@ -77,9 +77,8 @@
             login () {
                 this.$refs.observer.validate()
                 let credentials = {'email':this.email,'password':this.password}
-                axios.post('/api/login',credentials)
-                    .then(res=>console.log(res.data))
-                    .catch(error=>alert('Something went wrong, Please try again'))
+
+                User.login(credentials)
 
             },
             clear () {
