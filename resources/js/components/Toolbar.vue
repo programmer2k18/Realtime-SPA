@@ -2,7 +2,6 @@
     <v-card
             color="grey lighten-4"
             flat
-            height="200px"
             tile
     >
         <v-toolbar dense>
@@ -13,18 +12,15 @@
 
             <div class="hidden-sm-and-down">
 
-                <router-link to="/forum">
-                    <v-btn text>Forum</v-btn>
+
+                <router-link
+                   v-for="item in items"
+                   v-if="item.show"
+                   :key="item.title"
+                   :to="item.to"
+                    >
+                    <v-btn text>{{item.title}}</v-btn>
                 </router-link>
-
-                <v-btn text>Ask Question</v-btn>
-
-                <v-btn text>Category</v-btn>
-
-                <router-link to="/login">
-                    <v-btn text>Login</v-btn>
-                </router-link>
-
             </div>
 
         </v-toolbar>
@@ -33,7 +29,23 @@
 
 <script>
     export default {
-        name: "Toolbar"
+        name: "Toolbar",
+        data(){
+            return{
+                items:[
+                    {title:'Forum',to:'/forum',show:true},
+                    {title:'Ask Question', to:'/ask', show:User.loggedIn()},
+                    {title:'Category', to:'/category', show:User.loggedIn()},
+                    {title:'Login', to:'/login', show: !User.loggedIn()},
+                    {title:'Logout', to:'/logout', show: User.loggedIn()},
+                ]
+            }
+        },
+        created() {
+            EventBus.$on('logout',()=>{
+                User.logout()
+            })
+        }
     }
 </script>
 

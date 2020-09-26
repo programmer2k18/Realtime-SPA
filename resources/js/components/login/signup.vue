@@ -3,6 +3,16 @@
         <ValidationObserver ref="observer" v-slot="{ validate, reset }">
             <form>
 
+                <ValidationProvider v-slot="{ errors }" name="name" rules="required">
+                    <v-text-field
+                            v-model="name"
+                            :error-messages="errors"
+                            label="Name"
+                            type="text"
+                            required
+                    ></v-text-field>
+                </ValidationProvider>
+
                 <ValidationProvider v-slot="{ errors }" name="email" rules="required|email">
                     <v-text-field
                             v-model="email"
@@ -23,6 +33,16 @@
                     ></v-text-field>
                 </ValidationProvider>
 
+                <ValidationProvider v-slot="{ errors }" name="Password" rules="required|max:15">
+                    <v-text-field
+                            v-model="password_confirm"
+                            :error-messages="errors"
+                            label="Confirm Password"
+                            type="password"
+                            required
+                    ></v-text-field>
+                </ValidationProvider>
+
 
                 <ValidationProvider v-slot="{ errors, valid }"  name="checkbox">
                     <v-checkbox
@@ -34,10 +54,12 @@
                     ></v-checkbox>
                 </ValidationProvider>
 
-                <v-btn class="mr-4" @click="login" color="green">Login</v-btn>
-                <router-link to="/signup">
-                    <v-btn color="blue">SignUp</v-btn>
+                <v-btn class="mr-4" @click="checkInputs" color="green">Sign Up</v-btn>
+
+                <router-link to="/login">
+                    <v-btn color="blue">Login</v-btn>
                 </router-link>
+
                 <v-btn @click="clear">Clear</v-btn>
             </form>
         </ValidationObserver>
@@ -72,28 +94,39 @@
         },
         data: () => ({
             password: '',
+            password_confirm:'',
             email: '',
+            name:'',
             rememberMe: null,
         }),
         created(){
-          if (User.loggedIn())
-              this.$router.push({name:'forum'})
+            if (User.loggedIn())
+                this.$router.push({name:'forum'})
         },
         methods: {
+            signup () {
+                let credentials = {'name':this.name,'email':this.email,
+                                   'password':this.password};
+                User.signup(credentials);
 
-            login () {
-                this.$refs.observer.validate();
-                if (this.email=='' || this.password =='')
-                    return;
-
-                let credentials = {'email':this.email,'password':this.password};
-                User.login(credentials)
             },
+            checkInputs(){
 
+                this.$refs.observer.validate();
+                if (this.name =='' || this.email=='' || this.password =='')
+                  return;
+                if (this.password !== this.password_confirm)
+                {
+                  alert('passwords don\'t match, Please confirm password correctly');
+                  return;}
+                this.signup()
+                //this.$router.push({name:'forum'})
 
+            },
             clear () {
                 this.email = '';
                 this.password = '';
+                this.password_confirm = '';
                 this.rememberMe = null;
                 this.$refs.observer.reset();
             },

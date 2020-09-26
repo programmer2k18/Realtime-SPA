@@ -10,11 +10,19 @@ class User {
             .catch(error=>alert('Something went wrong, Please try again'))
     }
 
+    signup(credentials){
+
+        axios.post('/api/signup',credentials)
+            .then( res=>this.responseAfterLogin(res) )
+            .catch(error=>alert('Something went wrong, Please try again'))
+    }
+
     responseAfterLogin(res){
 
-        if (Token.isValid(res.data.access_token))
-            AppStorage.storeCredentials(res.data.access_token, res.data.user)
-
+        if (Token.isValid(res.data.access_token)) {
+            AppStorage.storeCredentials(res.data.access_token, res.data.user.id);
+            window.location='/forum';
+        }
     }
 
     hasToken(){
@@ -28,9 +36,13 @@ class User {
 
     loggedIn(){ return this.hasToken() }
 
-    logout() { AppStorage.clearCredentials() }
+    logout() { AppStorage.clearCredentials(); window.location ='/forum'; }
 
     userData(){ return AppStorage.getUser() }
+
+    ownsTheQuestion(user_id){
+        return this.userData() == user_id;
+    }
 }
 
 export default User = new User()

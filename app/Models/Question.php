@@ -29,16 +29,17 @@ class Question extends Model
     }
 
     public static function storeQuestion(array $data){
-        $data = array_merge($data,['slug'=>Str::slug($data['title'])]);
+        $data = array_merge($data,['slug'=>Str::slug($data['title'])
+        ,'user_id'=>auth()->id()]);
         return Question::create($data);
     }
 
     public static function getAllQuestions(){
-        return Question::with('user','category')->latest()->get();
+        return Question::with('user')->latest()->get();
     }
 
     public function path(){
-        return asset("api/question/$this->slug");
+        return "question/$this->slug";
     }
 
 }

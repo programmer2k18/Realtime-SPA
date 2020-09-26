@@ -92,8 +92,7 @@ class QuestionController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'body' => 'required|string',
-            'category_id' => 'required|numeric',
-            'user_id' => 'required|numeric'
+            'category_id' => 'required|numeric'
         ]);
         return $validator;
     }

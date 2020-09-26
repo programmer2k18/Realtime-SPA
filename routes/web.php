@@ -14,4 +14,6 @@
 
 Route::view('/','home');
 Route::view('/{path}','home');
+Route::view('/{path}/{further_path}','home');
+Route::view('/{path}/{further_path}/{another_path}','home');
 

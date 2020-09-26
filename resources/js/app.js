@@ -11,8 +11,8 @@ import router from './router/router.js'
 
 //importing user
 import User from './Helpers/User.js'
-window.User = User
-
+window.User = User;
+window.EventBus = new Vue();
 //Registering components
 Vue.component('app-home', require('./components/AppHome.vue').default);
 
