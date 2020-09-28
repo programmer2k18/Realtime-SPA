@@ -42,7 +42,7 @@ class CategoryController extends Controller
                 'errors'=>$validator->errors()],206);
 
         $data = Category::storeCategory($validator->validated());
-        return response($data,201);
+        return response( new CategoryResource($data),201);
     }
 
     /**

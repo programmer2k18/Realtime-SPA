@@ -10,7 +10,11 @@
                ></Question>
              <hr>
          </v-flex>
-         Sidebar
+
+         <v-flex xs4>
+             <app-sidebar></app-sidebar>
+         </v-flex>
+
       </v-layout>
    </v-container>
 
@@ -19,6 +23,7 @@
 
 <script>
     import Question from "./Question";
+    import AppSidebar from "./AppSidebar";
     export default {
        name: "Forum",
 
@@ -32,7 +37,7 @@
                  .then(res => this.questions = res.data)
                  .catch(error=>alert('Something went wrong, Please try again'))
        },
-       components: {Question}
+       components: {AppSidebar, Question}
     }
 </script>
 

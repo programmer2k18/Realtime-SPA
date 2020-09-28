@@ -10,6 +10,7 @@ import Forum from '../components/forum/Forum'
 import SingleQuestion from '../components/forum/ReadSingleQuestion'
 import CreateQuestion from '../components/forum/createQuestion'
 import EditQuestion from '../components/forum/EditQuestion'
+import CreateCategory from '../components/category/CreateCategory'
 
 // 2. Define some routes
 // Each route should map to a component. The "component" can
@@ -21,6 +22,7 @@ const routes = [
     { path: '/question/:slug', component: SingleQuestion, name:'readQuestion'},
     { path: '/question/question/:questionSlug', component: EditQuestion, name:'editQuestion'},
     { path: '/ask', component: CreateQuestion},
+    { path: '/Category/Create', component: CreateCategory},
 ]
 
 // 3. Create the router instance and pass the `routes` option
