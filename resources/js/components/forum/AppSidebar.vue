@@ -5,23 +5,31 @@
                 Categories
             </v-toolbar-title>
         </v-toolbar>
-        <v-list>
 
-            <v-list-item-group color="primary">
-
-                <v-list-item
-                        v-for="category in categories"
-                        :key="category.id"
+        <v-row justify="space-around">
+            <v-col
+                    cols="12"
+                    sm="12"
+            >
+                <v-sheet
+                        elevation="10"
+                        class="pa-4"
                 >
+                    <v-chip-group
+                            column
+                            active-class="primary--text"
+                    >
+                        <v-chip
+                                v-for="category in categories"
+                                :key="category.id"
+                        >
+                            {{ category.name }}
+                        </v-chip>
+                    </v-chip-group>
+                </v-sheet>
+            </v-col>
+        </v-row>
 
-                        <v-list-item-content>
-                            <v-list-item-title v-text="category.name"></v-list-item-title>
-                        </v-list-item-content>
-
-                </v-list-item>
-            </v-list-item-group>
-
-        </v-list>
     </v-card>
 </template>
 

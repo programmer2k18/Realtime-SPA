@@ -18,14 +18,14 @@ class LikeController extends Controller
     public function likeReply(Reply $reply){
 
         $reply->likes()->create([
-            'user_id' => 1
+            'user_id' => auth()->id()
         ]);
-        return response( new ReplyResource($reply),201);
+        return response( 'liked',201);
     }
 
     public function unLikeReply(Reply $reply){
 
-        $reply->likes()->where('user_id', 1)->first()->delete();
-        return response( new ReplyResource($reply),200);
+        $reply->likes()->where('user_id', auth()->id())->first()->delete();
+        return response( 'disliked',200);
     }
 }

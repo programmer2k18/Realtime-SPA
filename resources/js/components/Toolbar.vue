@@ -10,32 +10,34 @@
             <v-toolbar-title>SPA</v-toolbar-title>
             <v-spacer></v-spacer>
 
+            <AppNotification></AppNotification>
             <div class="hidden-sm-and-down">
-
-
                 <router-link
                    v-for="item in items"
                    v-if="item.show"
                    :key="item.title"
                    :to="item.to"
-                    >
+                    style="text-decoration:none">
                     <v-btn text>{{item.title}}</v-btn>
                 </router-link>
             </div>
 
         </v-toolbar>
     </v-card>
+
 </template>
 
 <script>
+    import AppNotification from "./AppNotification";
     export default {
         name: "Toolbar",
+        components: {AppNotification},
         data(){
             return{
                 items:[
                     {title:'Forum',to:'/forum',show:true},
                     {title:'Ask Question', to:'/ask', show:User.loggedIn()},
-                    {title:'Category', to:'/Category/Create', show:User.loggedIn()},
+                    {title:'Category', to:'/Category/Create', show:User.loggedIn() && User.isAdmin()},
                     {title:'Login', to:'/login', show: !User.loggedIn()},
                     {title:'Logout', to:'/logout', show: User.loggedIn()},
                 ]

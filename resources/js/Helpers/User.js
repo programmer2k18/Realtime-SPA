@@ -43,6 +43,8 @@ class User {
     ownsTheQuestion(user_id){
         return this.userData() == user_id;
     }
+
+    isAdmin(){return this.userData() == 106;}
 }
 
 export default User = new User()

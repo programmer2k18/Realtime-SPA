@@ -13,6 +13,7 @@ class CreateRepliesTable extends Migration
      */
     public function up()
     {
+        if (! Schema::hasTable('replies')) {
         Schema::create('replies', function (Blueprint $table) {
             $table->Increments('id');
             $table->text('body');
@@ -29,6 +30,7 @@ class CreateRepliesTable extends Migration
 
             $table->timestamps();
         });
+        }
     }
 
     /**

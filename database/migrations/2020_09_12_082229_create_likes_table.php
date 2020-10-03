@@ -13,7 +13,8 @@ class CreateLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('likes', function (Blueprint $table) {
+        if (! Schema::hasTable('likes')) {
+         Schema::create('likes', function (Blueprint $table) {
             $table->Increments('id');
             $table->integer('reply_id')->unsigned();
             $table->integer('user_id')->unsigned();
@@ -26,6 +27,7 @@ class CreateLikesTable extends Migration
 
             $table->timestamps();
         });
+        }
     }
 
     /**

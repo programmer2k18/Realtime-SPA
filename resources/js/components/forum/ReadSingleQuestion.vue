@@ -1,6 +1,7 @@
 <template>
 
     <v-card>
+
         <v-container fluid>
 
             <v-card-title primary-title>
@@ -15,7 +16,7 @@
                     </div>
                 </div>
                 <v-spacer></v-spacer>
-                <v-btn color="#5c6bc0">5 Replies</v-btn>
+                <v-btn color="blue">{{Object.keys(this.question.replies).length}} Replies</v-btn>
             </v-card-title>
 
             <v-card-text>
@@ -25,30 +26,42 @@
 
             <v-card-actions v-if="OwnerOfQuestion">
 
-                <router-link :to="question.path">
-                    <v-icon color="red">Edit</v-icon>
+                <router-link :to="question.path" icon style="text-decoration:none">
+                    <v-icon color="blue">mdi-pencil</v-icon>
                 </router-link>
 
-                <v-btn  small @click="deleteQuestion">
-                    <v-icon color="red">Delete</v-icon>
+                <v-btn icon small @click="deleteQuestion">
+                    <v-icon  color="red">mdi-delete</v-icon>
                 </v-btn>
 
             </v-card-actions>
 
+            <create-reply
+            :question="question"
+            ></create-reply>
+
+            <reply
+                   :question="question"
+                   :key="question.title">
+            </reply>
+
         </v-container>
+
     </v-card>
 
 
 </template>
 
 <script>
+    import Reply from "../replies/reply";
+    import CreateReply from "../replies/createReply";
     export default {
         name: "ReadSingleQuestion",
-
+        components: {CreateReply, Reply},
         data(){
             return{
                 question:{},
-                OwnerOfQuestion:null /*User.ownsTheQuestion(this.question.author)*/
+                OwnerOfQuestion:null
             }
         },
 
@@ -63,6 +76,7 @@
 
         },
         methods:{
+
             deleteQuestion(){
                 axios.delete('/api/question/'+this.question.path.split('/')[1])
                      .then(res => this.$router.push({name:'forum'}))

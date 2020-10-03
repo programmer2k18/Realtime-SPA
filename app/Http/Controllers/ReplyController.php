@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Reply\ReplyResource;
 use App\Models\Question;
 use App\Models\Reply;
+use App\Notifications\NewReplyNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,6 +43,7 @@ class ReplyController extends Controller
                 'errors'=>$validator->errors()],206);
 
         $reply = $question->replies()->create($validator->validated());
+        $this->notifyQuestionAuthor($question,$reply);
         return response( new ReplyResource($reply),201);
     }
 
@@ -73,17 +75,16 @@ class ReplyController extends Controller
         return response( new ReplyResource($reply),200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Reply  $reply
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Question $question,Reply $reply)
     {
         return $reply->delete()?
             response(['msg'=>'Comment deleted successfully'],200):
             response(['msg'=>'Something went wrong, Couldn\'t delete this Category'],404);
+    }
+
+    public function notifyQuestionAuthor($question,$reply){
+        if ($question->user_id !== $reply->user_id)
+            $question->user->notify(new NewReplyNotification($reply));
     }
 
     public function validateReplyInputs(Request $request){

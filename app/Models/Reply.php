@@ -9,7 +9,7 @@ class Reply extends Model
 {
     protected $fillable = ['body','user_id','question_id'];
     protected $guarded = ['id'];
-
+    protected $with =['user','likes'];
     public function question(){
         return $this->belongsTo(Question::class);
     }
@@ -21,4 +21,5 @@ class Reply extends Model
     public function likes(){
         return $this->hasMany(Like::class);
     }
+
 }

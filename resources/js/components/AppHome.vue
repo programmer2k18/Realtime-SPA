@@ -4,7 +4,8 @@
            <div>
 
                <Toolbar></Toolbar>
-               <router-view></router-view>
+               <router-view
+               style="min-height: 600px"></router-view>
                <app-footer></app-footer>
 
            </div>
