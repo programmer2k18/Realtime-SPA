@@ -70,6 +70,17 @@
             }
         },
         created(){
+
+            Echo.channel('LikeReply')
+                .listen('LikeEvent', (e) => {
+                    _.map(this.question.replies,function (reply) {
+                        if(reply.reply_id == e.reply_id){
+                            e.type ==1 ? reply.likes++:reply.likes--;
+                            return;
+                        }
+                    });
+                });
+
             EventBus.$on('UpdatedSuccessfully',()=>{this.editing = false});
             EventBus.$on('cancelReply',()=>{this.editing = false});
         },
@@ -99,6 +110,7 @@
                 axios.post('/api/like/'+reply.reply_id)
                      .then(res => {
                          this.liked = true;
+                         reply.liked = true;
                          reply.likes++;
                      })
                      .catch(error => alert('something went wrong'));
@@ -107,6 +119,7 @@
                 axios.delete('/api/unlike/'+reply.reply_id)
                     .then(res => {
                         this.liked = false;
+                        reply.liked = false;
                         reply.likes--;
                     })
                     .catch(error => alert('something went wrong'));
