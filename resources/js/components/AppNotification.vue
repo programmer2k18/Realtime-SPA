@@ -13,9 +13,10 @@
                     <v-icon color="red">mdi-bell</v-icon>
 
                 </v-btn>
+                {{unreadCount}}
             </template>
 
-            <v-list>
+            <v-list  style="max-height: 300px; overflow-y: scroll">
                 <v-list-item v-for="(notification,index) in unread"
                              :key="notification.id">
 
@@ -25,7 +26,6 @@
                             {{notification.data.reply_body}}
                         </v-list-item-title>
                     </router-link>
-
                 </v-list-item>
 
                 <v-divider></v-divider>
@@ -57,6 +57,14 @@
             }
         },
         created(){
+
+            Echo.channel('App.User.'+User.userData())
+                .notification((notification) => {
+                    // console.log(notification);
+                    this.unread.unshift({data:notification});
+                    this.unreadCount++;
+                });
+
             if (User.loggedIn())
                 this.getNotifications();
         },

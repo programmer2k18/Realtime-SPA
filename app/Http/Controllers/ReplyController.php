@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeleteReply;
 use App\Http\Resources\Reply\ReplyResource;
 use App\Models\Question;
 use App\Models\Reply;
 use App\Notifications\NewReplyNotification;
+use function Composer\Autoload\includeFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,14 +79,19 @@ class ReplyController extends Controller
 
     public function destroy(Question $question,Reply $reply)
     {
-        return $reply->delete()?
-            response(['msg'=>'Comment deleted successfully'],200):
-            response(['msg'=>'Something went wrong, Couldn\'t delete this Category'],404);
+        broadcast(new DeleteReply($question->id, $reply->id))->toOthers();
+        if($reply->delete()){
+            return response(['msg'=>'Comment deleted successfully'],200);
+        }
+        return response(['msg'=>'Something went wrong, Couldn\'t 
+                                 delete this Category'],404);
     }
 
     public function notifyQuestionAuthor($question,$reply){
-        if ($question->user_id !== $reply->user_id)
-            $question->user->notify(new NewReplyNotification($reply));
+        if ($question->user_id !== $reply->user_id){
+            $question->user->notify(new NewReplyNotification($reply, 'notifyOthers'));
+            $question->user->notify(new NewReplyNotification($reply,'forAuthorNotification'));
+        }
     }
 
     public function validateReplyInputs(Request $request){

@@ -11,12 +11,23 @@ class Token {
     }
 
     payload(token){
-
-        const payload = token.split('.')[1]
+        const payload = token.split('.')[1];
         return this.decode(payload)
     }
 
-    decode(payload) { return JSON.parse( atob(payload) ) }
+    decode(payload) {
+        if(this.isBase64Format(payload))
+            return JSON.parse( atob(payload));
+        return false;
+    }
+
+    isBase64Format(str){
+        try {
+            return btoa(atob(str)).replace(/=/g,"") === str;
+        } catch (e) {
+            return false;
+        }
+    }
 }
 
 export default Token = new Token()

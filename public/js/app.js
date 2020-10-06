@@ -2062,31 +2062,41 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    var _this = this;
+
+    Echo.channel('App.User.' + User.userData()).notification(function (notification) {
+      // console.log(notification);
+      _this.unread.unshift({
+        data: notification
+      });
+
+      _this.unreadCount++;
+    });
     if (User.loggedIn()) this.getNotifications();
   },
   methods: {
     getNotifications: function getNotifications() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('/api/notifications').then(function (res) {
-        _this.read = res.data.read;
-        _this.unread = res.data.unread;
-        _this.unreadCount = res.data.unread.length;
+        _this2.read = res.data.read;
+        _this2.unread = res.data.unread;
+        _this2.unreadCount = res.data.unread.length;
       })["catch"](function (error) {
         return alert('Something went wrong');
       });
     },
     markAsRead: function markAsRead(notification, index) {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.put('/api/notification/markAsRead', {
         id: notification.id
       }).then(function (res) {
-        _this2.read.push(notification);
+        _this3.read.push(notification);
 
-        _this2.unread.splice(index, 1);
+        _this3.unread.splice(index, 1);
 
-        _this2.unreadCount--;
+        _this3.unreadCount--;
       })["catch"](function (error) {
         return alert('Something went wrong');
       });
@@ -2714,6 +2724,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2727,6 +2739,11 @@ __webpack_require__.r(__webpack_exports__);
       question: {},
       OwnerOfQuestion: null
     };
+  },
+  computed: {
+    loggedIn: function loggedIn() {
+      return User.loggedIn();
+    }
   },
   created: function created() {
     var _this = this;
@@ -3251,9 +3268,8 @@ Object(vee_validate__WEBPACK_IMPORTED_MODULE_1__["extend"])('max', _objectSpread
         question_id: this.question.id
       };
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/' + this.question.path + '/reply', data).then(function (res) {
-        _this.clear();
+        _this.clear(); //this.question.replies.unshift(res.data);
 
-        _this.question.replies.unshift(res.data);
       })["catch"](function (error) {
         return alert('Something went wrong');
       });
@@ -3443,6 +3459,20 @@ __webpack_require__.r(__webpack_exports__);
           return;
         }
       });
+    });
+    Echo.channel('App.User.' + this.question.id).notification(function (notification) {
+      _this.question.replies.unshift(notification.reply);
+    });
+    Echo.channel('ReplyDeleted.' + this.question.id).listen('DeleteReply', function (e) {
+      var length = _this.question.replies.length;
+
+      for (var index = 0; index < length; index++) {
+        if (_this.question.replies[index].reply_id == e.reply_id) {
+          _this.question.replies.splice(index, 1);
+
+          return;
+        }
+      }
     });
     EventBus.$on('UpdatedSuccessfully', function () {
       _this.editing = false;
@@ -30704,6 +30734,9 @@ var render = function() {
                       ])
                     ],
                     1
+                  ),
+                  _vm._v(
+                    "\n            " + _vm._s(_vm.unreadCount) + "\n        "
                   )
                 ]
               }
@@ -30714,6 +30747,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-list",
+            { staticStyle: { "max-height": "300px", "overflow-y": "scroll" } },
             [
               _vm._l(_vm.unread, function(notification, index) {
                 return _c(
@@ -31506,7 +31540,11 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _c("create-reply", { attrs: { question: _vm.question } }),
+          _vm.loggedIn
+            ? _c("create-reply", { attrs: { question: _vm.question } })
+            : _c("router-link", { attrs: { to: "/login" } }, [
+                _vm._v("Please Login to reply")
+              ]),
           _vm._v(" "),
           _c("reply", {
             key: _vm.question.title,
@@ -91554,7 +91592,17 @@ var Token = /*#__PURE__*/function () {
   }, {
     key: "decode",
     value: function decode(payload) {
-      return JSON.parse(atob(payload));
+      if (this.isBase64Format(payload)) return JSON.parse(atob(payload));
+      return false;
+    }
+  }, {
+    key: "isBase64Format",
+    value: function isBase64Format(str) {
+      try {
+        return btoa(atob(str)).replace(/=/g, "") === str;
+      } catch (e) {
+        return false;
+      }
     }
   }]);
 
@@ -91626,7 +91674,7 @@ var User = /*#__PURE__*/function () {
       var storedToken = _AppStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"].getToken();
 
       if (storedToken) {
-        return _Token_js__WEBPACK_IMPORTED_MODULE_0__["default"].isValid(storedToken) ? true : false;
+        return _Token_js__WEBPACK_IMPORTED_MODULE_0__["default"].isValid(storedToken) ? true : this.logout();
       }
 
       return false;
@@ -91733,9 +91781,15 @@ window.axios.defaults.headers.common['Authorization'] = JWTtoken;
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
+  authEndpoint: 'http://127.0.0.1:8000/api/me',
   key: "bda157c2b60b919d5dad",
   cluster: "eu",
-  forceTLS: true
+  forceTLS: true,
+  auth: {
+    headers: {
+      Authorization: JWTtoken
+    }
+  }
 });
 
 /***/ }),

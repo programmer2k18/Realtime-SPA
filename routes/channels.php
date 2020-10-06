@@ -11,10 +11,14 @@
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('App.User.{questionID}', function ($user, $id) {
+    return true;
 });
 
 Broadcast::channel('LikeReply', function () {
+    return true;
+});
+
+Broadcast::channel('ReplyDeleted.{questionID}', function () {
     return true;
 });

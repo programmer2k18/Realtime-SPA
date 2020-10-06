@@ -59,7 +59,7 @@
                 axios.post('/api/'+this.question.path+'/reply',data)
                      .then(res =>{
                          this.clear();
-                         this.question.replies.unshift(res.data);
+                         //this.question.replies.unshift(res.data);
                      })
                      .catch(error => alert('Something went wrong'))
             },

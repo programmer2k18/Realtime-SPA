@@ -25,7 +25,13 @@ window.axios.defaults.headers.common['Authorization'] = JWTtoken;
 
  window.Echo = new Echo({
      broadcaster: 'pusher',
+     authEndpoint : 'http://127.0.0.1:8000/api/me',
      key: process.env.MIX_PUSHER_APP_KEY,
      cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-     forceTLS: true
+     forceTLS: true,
+     auth:{
+         headers:{
+             Authorization:JWTtoken
+         }
+     }
  });

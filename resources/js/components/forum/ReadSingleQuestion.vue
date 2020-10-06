@@ -37,8 +37,10 @@
             </v-card-actions>
 
             <create-reply
+             v-if="loggedIn"
             :question="question"
             ></create-reply>
+            <router-link v-else to="/login">Please Login to reply</router-link>
 
             <reply
                    :question="question"
@@ -62,6 +64,11 @@
             return{
                 question:{},
                 OwnerOfQuestion:null
+            }
+        },
+        computed:{
+            loggedIn(){
+                return User.loggedIn();
             }
         },
 

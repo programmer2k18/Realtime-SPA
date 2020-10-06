@@ -81,6 +81,25 @@
                     });
                 });
 
+            Echo.channel('App.User.'+this.question.id)
+                .notification((notification) => {
+                        this.question.replies.unshift(notification.reply)
+                });
+
+            Echo.channel('ReplyDeleted.'+this.question.id)
+                .listen('DeleteReply', (e) => {
+
+                    let length = this.question.replies.length;
+                    for(let index =0; index < length;index++){
+                        if (this.question.replies[index].reply_id == e.reply_id){
+                            this.question.replies.splice(index,1);
+                            return;
+                        }
+                    }
+
+
+                });
+
             EventBus.$on('UpdatedSuccessfully',()=>{this.editing = false});
             EventBus.$on('cancelReply',()=>{this.editing = false});
         },
