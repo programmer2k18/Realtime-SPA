@@ -4,10 +4,14 @@
             flat
             tile
     >
-        <v-toolbar dense>
+        <v-toolbar color="indigo" dark>
 
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            <v-toolbar-title>SPA</v-toolbar-title>
+            <v-toolbar-title>
+                <router-link class="white--text"  style="text-decoration: none"
+                             to="/">
+                    SPA Forum</router-link>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
 
             <AppNotification></AppNotification>

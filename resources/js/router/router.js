@@ -11,10 +11,12 @@ import SingleQuestion from '../components/forum/ReadSingleQuestion'
 import CreateQuestion from '../components/forum/createQuestion'
 import EditQuestion from '../components/forum/EditQuestion'
 import CreateCategory from '../components/category/CreateCategory'
+import Parallex from '../components/parallex'
 
 // 2. Define some routes
 // Each route should map to a component. The "component" can
 const routes = [
+    { path: '/', component: Parallex},
     { path: '/login', component: Login,},
     { path: '/logout', component: Logout,},
     { path: '/signup', component: Signup},
