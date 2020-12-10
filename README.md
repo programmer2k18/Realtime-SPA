@@ -1,4 +1,5 @@
 # Real-time-single-page-app
+Question and Answer community real time single page web app
 using laravel, vue.js, vuetify, pusher, vueRouter
 
 # Installation
